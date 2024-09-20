@@ -51,11 +51,13 @@ resolvers +=
 
 libraryDependencies ++= Seq(
   compilerPlugin(Libraries.kindProjector),
+  Libraries.caffeine,
   Libraries.cats,
   Libraries.catsEffect,
   Libraries.fs2,
   Libraries.http4sDsl,
   Libraries.http4sServer,
+  Libraries.http4sBlazeClient,
   Libraries.http4sCirce,
   Libraries.circeCore,
   Libraries.circeGeneric,
@@ -67,3 +69,9 @@ libraryDependencies ++= Seq(
   Libraries.scalaCheck     % Test,
   Libraries.catsScalaCheck % Test
 )
+
+lazy val hello = taskKey[Unit]("Prints 'Hello, World!'")
+
+hello := {
+  println("Hello, World!")
+}

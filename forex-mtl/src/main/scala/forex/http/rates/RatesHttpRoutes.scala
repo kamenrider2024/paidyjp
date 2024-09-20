@@ -15,15 +15,23 @@ class RatesHttpRoutes[F[_]: Sync](rates: RatesProgram[F]) extends Http4sDsl[F] {
 
   private[http] val prefixPath = "/rates"
 
-  private val httpRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
+  private[http] val prefixPathTest = "/test1"
+
+  private val oneFrameServiceGetRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root :? FromQueryParam(from) +& ToQueryParam(to) =>
       rates.get(RatesProgramProtocol.GetRatesRequest(from, to)).flatMap(Sync[F].fromEither).flatMap { rate =>
         Ok(rate.asGetApiResponse)
       }
   }
 
+  private val httpTestRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
+    case GET -> Root =>
+      Ok("This is a test API response")
+  }
+
   val routes: HttpRoutes[F] = Router(
-    prefixPath -> httpRoutes
+    prefixPath -> oneFrameServiceGetRoutes,
+    prefixPathTest -> httpTestRoutes
   )
 
 }
